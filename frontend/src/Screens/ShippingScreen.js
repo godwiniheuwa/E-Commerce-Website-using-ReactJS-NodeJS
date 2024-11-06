@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { saveShipping } from "../actions/cartAction";
+import { saveShipping } from "../actions/CartAction";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 function ShippingScreen(props) {

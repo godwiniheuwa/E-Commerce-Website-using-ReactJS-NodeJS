@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productActions";
 
-import Corousel from "../components/Corousel";
+import Carousel from "../components/Carousel";
 
 function HomeScreen(props) {
     const productList = useSelector(state => state.productList);
@@ -19,7 +19,7 @@ function HomeScreen(props) {
 
     return (
         <div>
-            <Corousel />
+            <Carousel />
             {loading ? (
                 <div>loading...</div>
             ) : error ? (

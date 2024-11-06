@@ -4,15 +4,16 @@ import "./App.css";
 import { BrowserRouter, Route, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import HomeScreen from "./screens/HomeScreen";
-import ProductScreen from "./screens/ProductScreen";
-import CartScreen from "./screens/CartScreen";
-import SigninScreen from "./screens/SigninScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import ProductsScreen from "./screens/ProductsScreen";
-import ShipppingScreen from "./screens/ShippingScreen";
-import PaymentScreen from "./screens/PaymentScreen";
-import PlaceOrderScreen from "./screens/PlaceOrderScreen";
+import HomeScreen from "./Screens/HomeScreen";
+import ProductScreen from "./Screens/ProductScreen";
+import CartScreen from "./Screens/CartScreen";
+import SigninScreen from "./Screens/SigninScreen";
+import RegisterScreen from "./Screens/RegisterScreen";
+import ProductsScreen from "./Screens/ProductsScreen";
+import ShipppingScreen from "./Screens/ShippingScreen";
+import PaymentScreen from "./Screens/PaymentScreen";
+import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
+
 
 import logo from "./Images/logo.png";
 

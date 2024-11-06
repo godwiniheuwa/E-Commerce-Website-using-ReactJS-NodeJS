@@ -1,8 +1,7 @@
-import dotenv from "dotenv";
-
+const dotenv = require("dotenv");
 dotenv.config();
 
-export default {
-    MONGODB_URL: process.env.MONGODB_URL || "mongodb://localhost/amazon",
-    JWT_SECRET: process.env.JWT_SECRET || "somethingsecret"
+module.exports = {
+    MONGODB_URL: process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/ecommerce",
+    JWT_SECRET: process.env.JWT_SECRET || "somethingsecret",
 };

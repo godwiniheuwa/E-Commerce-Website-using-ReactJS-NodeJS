@@ -4,14 +4,16 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and yarn.lock files
+# Copy only necessary files for dependencies
 COPY package.json yarn.lock . 
 
 # Install dependencies with Yarn
 RUN yarn install
 
-# Copy the rest of the frontend files
-COPY . .  # Copy all other files
+# Copy only essential files and folders
+COPY public ./public
+COPY src ./src
+COPY .env .  # If you have any environment variables for frontend
 
 # Build the React app using Yarn
 RUN yarn build

@@ -13,7 +13,6 @@ RUN yarn install
 # Copy only essential files and folders
 COPY public ./public
 COPY src ./src
-COPY .env .  # If you have any environment variables for frontend
 
 # Build the React app using Yarn
 RUN yarn build

@@ -3,14 +3,16 @@ FROM node:18
 
 WORKDIR /app
 
-# Copy the package.json from the root directory
-COPY ../package.json ./backend/package.json
+# Copy package.json from the root directory to /app directory in the container
+COPY package.json ./ 
 
+# Change working directory to backend
 WORKDIR /app/backend
 
+# Install dependencies
 RUN npm install
 
-# Copy everything from the backend folder
+# Copy all files from backend directory
 COPY . .
 
 EXPOSE 5000

@@ -18,25 +18,64 @@ A E-Commerce website developed using ReactJS for the frontend, NodeJs for the ba
 
 
 ## Requirements
-To run this project, install it locally using npm:
+To run this project, follow the steps below:
 
-- git clone git@github.com:suhassalian27/E-Commerce-Website-using-ReactJS-NodeJS.git
+### Step 1: Clone the Repository
+Clone the repository to your local machine:
+```bash
+git clone git@github.com:godwiniheuwa/E-Commerce-Website-using-ReactJS-NodeJS.git
+cd E-Commerce-Website-using-ReactJS-NodeJS
 ```
-  $ cd E-Commerce-Website-using-ReactJS-NodeJS
+
+### Step 2: Install MongoDB
+1. Download and install MongoDB from the [official MongoDB website](https://docs.mongodb.com/manual/installation/).
+2. Ensure MongoDB is running on `localhost:27017`. You can do this by running MongoDB as a service or starting it manually.
+
+### Step 3: Set Up Environment Variables
+1. In the root directory of the project, create a `.env` file.
+2. Add the following environment variables in your `.env` file:
+   ```plaintext
+   MONGODB_URL=mongodb://127.0.0.1:27017/ecommerce
+   JWT_SECRET=somesecretkey
+   ```
+   - **MONGODB_URL** should point to your local MongoDB instance.
+   - **JWT_SECRET** can be any string and is used for JWT authentication.
+
+### Step 4: Seed the Database (Optional)
+To add initial product data to the database, run the following command:
+
+```bash
+node backend/seed.js
 ```
-- To Run Backend
-  - open terminal 
-```
-  $ npm install
-  $ npm start
-```
-- To Run Frontend
-  - open new terminal
-```
-  $ cd frontend
-  $ npm install
-  $ npm start
-```
+
+> **Note:** Ensure MongoDB is running before executing this command.
+
+### Step 5: Install Dependencies and Run the Backend Server
+1. Install the backend dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the backend server:
+   ```bash
+   npm start
+   ```
+   The backend server will start on `http://localhost:5000`.
+
+### Step 6: Install Dependencies and Run the Frontend Server
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install the frontend dependencies using Yarn:
+   ```bash
+   yarn install
+   ```
+3. Start the frontend server:
+   ```bash
+   yarn start
+   ```
+   The frontend will start on `http://localhost:3000`.
+
 
 ## Technologies
 Project is created with:

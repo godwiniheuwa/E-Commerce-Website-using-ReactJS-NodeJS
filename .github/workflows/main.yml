@@ -1,0 +1,76 @@
+name: CI/CD Pipeline for MERN Application
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Build Backend Docker Image
+      - name: Build Backend Docker Image
+        working-directory: ./backend
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/mern-backend:latest .
+
+      # Step 3: Build Frontend Docker Image
+      - name: Build Frontend Docker Image
+        working-directory: ./frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/mern-frontend:latest .
+
+      # Step 4: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      # Step 5: Push Backend Docker Image
+      - name: Push Backend Docker Image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/mern-backend:latest
+
+      # Step 6: Push Frontend Docker Image
+      - name: Push Frontend Docker Image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/mern-frontend:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # Step 1: Configure kubectl
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v2
+        with:
+          version: 'v1.20.0' # Replace with your Kubernetes version
+
+      # Step 2: Configure AWS credentials for EKS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2 # Replace with your region
+
+      # Step 3: Update kubeconfig for EKS
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name your-cluster-name --region us-west-2
+
+      # Step 4: Deploy Kubernetes manifests
+      - name: Apply Kubernetes Manifests
+        run: |
+          kubectl apply -f k8s/aws-secret.yaml
+          kubectl apply -f k8s/backend-deployment.yaml
+          kubectl apply -f k8s/backend-service.yaml
+          kubectl apply -f k8s/frontend-deployment.yaml
+          kubectl apply -f k8s/frontend-service.yaml

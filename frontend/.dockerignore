@@ -1,0 +1,7 @@
+node_modules
+.git
+.env
+.vscode
+# Ignore any temporary files or IDE-specific files
+*~
+#*

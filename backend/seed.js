@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const data = require('./data.js');  // No need to use .default
-const Product = require('./models/productModel.js');
-const config = require('./config.js');
+const mongoose = require("mongoose");
+const data = require("./data.js");  // No need to use .default
+const Product = require("./models/productModel.js");
+const config = require("./config.js");
 
 mongoose.connect(config.MONGODB_URL, {
     useNewUrlParser: true,

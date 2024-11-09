@@ -41,9 +41,64 @@ jobs:
       - name: Push Frontend Docker Image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/mern-frontend:latest
 
-  deploy:
+  security_scan:
     runs-on: ubuntu-latest
     needs: build
+    steps:
+      # Step 1: Security Scanning with Trivy for Backend
+      - name: Security Scanning with Trivy (Backend)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/mern-backend:latest
+          format: 'html'
+          output: './trivy-backend-report.html'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
+
+      # Step 2: Security Scanning with Trivy for Frontend
+      - name: Security Scanning with Trivy (Frontend)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/mern-frontend:latest
+          format: 'html'
+          output: './trivy-frontend-report.html'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
+
+      # Step 3: Upload Security Reports as Artifacts
+      - name: Upload Trivy Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-reports
+          path: |
+            ./trivy-backend-report.html
+            ./trivy-frontend-report.html
+
+  sonarqube_scan:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: SonarCloud Scan
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=godwin-project_ecommerce
+            -Dsonar.organization=godwin-project
+            -Dsonar.sources=./
+            -Dsonar.exclusions=**/node_modules/**
+            -Dsonar.host.url=https://sonarcloud.io
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, security_scan, sonarqube_scan]
     steps:
       # Step 1: Checkout code (again for deployment phase)
       - name: Checkout code

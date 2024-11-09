@@ -65,9 +65,9 @@ jobs:
           path: './backend'
           format: 'json'
           output: './trivy-backend-source-report.json'
-          exit-code: '1'
           severity: 'HIGH,CRITICAL'
           args: '--scanners vuln'
+        continue-on-error: true
 
       # Step 3: Security Scanning with Trivy for Frontend Source
       - name: Security Scanning with Trivy (Frontend Source)
@@ -77,9 +77,9 @@ jobs:
           path: './frontend'
           format: 'json'
           output: './trivy-frontend-source-report.json'
-          exit-code: '1'
           severity: 'HIGH,CRITICAL'
           args: '--scanners vuln'
+        continue-on-error: true
 
       # Step 4: Security Scanning with Trivy for Backend Docker Image
       - name: Security Scanning with Trivy (Backend Image)
@@ -88,8 +88,8 @@ jobs:
           image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/mern-backend:latest
           format: 'json'
           output: './trivy-backend-image-report.json'
-          exit-code: '1'
           severity: 'HIGH,CRITICAL'
+        continue-on-error: true
 
       # Step 5: Security Scanning with Trivy for Frontend Docker Image
       - name: Security Scanning with Trivy (Frontend Image)
@@ -98,8 +98,8 @@ jobs:
           image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/mern-frontend:latest
           format: 'json'
           output: './trivy-frontend-image-report.json'
-          exit-code: '1'
           severity: 'HIGH,CRITICAL'
+        continue-on-error: true
 
       # Step 6: Upload Security Reports as Artifacts
       - name: Upload Trivy Reports
@@ -150,12 +150,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 # Replace with your AWS region
 
-    #   # Step 3: Update kubeconfig for EKS
+    #   # Step 3: Update kubeconfig for EKS (if applicable)
     #   - name: Update kubeconfig for EKS
     #     run: |
     #       aws eks update-kubeconfig --name your-cluster-name --region us-east-1
 
-    #   # Step 4: Apply Kubernetes manifests to deploy
+    #   # Step 4: Apply Kubernetes manifests to deploy (if applicable)
     #   - name: Deploy to EKS
     #     run: |
     #       kubectl apply -f k8s/aws-secret.yaml

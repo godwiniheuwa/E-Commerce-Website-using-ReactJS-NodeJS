@@ -45,34 +45,66 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Step 1: Security Scanning with Trivy for Backend
-      - name: Security Scanning with Trivy (Backend)
+      # Step 1: Checkout code for source code scanning
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Security Scanning with Trivy for Source Code (Backend)
+      - name: Security Scanning with Trivy (Backend Source)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          path: './backend'
+          format: 'json'
+          output: './trivy-backend-source-report.json'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
+          args: '--scanners vuln'
+
+      # Step 3: Security Scanning with Trivy for Source Code (Frontend)
+      - name: Security Scanning with Trivy (Frontend Source)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          path: './frontend'
+          format: 'json'
+          output: './trivy-frontend-source-report.json'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
+          args: '--scanners vuln'
+
+      # Step 4: Security Scanning with Trivy for Backend Docker Image
+      - name: Security Scanning with Trivy (Backend Docker Image)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/mern-backend:latest
-          format: 'json' # Supported format
-          output: './trivy-backend-report.json'
+          format: 'json'
+          output: './trivy-backend-image-report.json'
           exit-code: '1'
           severity: 'HIGH,CRITICAL'
+          args: '--scanners vuln'
 
-      # Step 2: Security Scanning with Trivy for Frontend
-      - name: Security Scanning with Trivy (Frontend)
+      # Step 5: Security Scanning with Trivy for Frontend Docker Image
+      - name: Security Scanning with Trivy (Frontend Docker Image)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/mern-frontend:latest
-          format: 'json' # Supported format
-          output: './trivy-frontend-report.json'
+          format: 'json'
+          output: './trivy-frontend-image-report.json'
           exit-code: '1'
           severity: 'HIGH,CRITICAL'
+          args: '--scanners vuln'
 
-      # Step 3: Upload Security Reports as Artifacts
+      # Step 6: Upload Security Reports as Artifacts
       - name: Upload Trivy Reports
         uses: actions/upload-artifact@v3
         with:
           name: trivy-reports
           path: |
-            ./trivy-backend-report.json
-            ./trivy-frontend-report.json
+            ./trivy-backend-source-report.json
+            ./trivy-frontend-source-report.json
+            ./trivy-backend-image-report.json
+            ./trivy-frontend-image-report.json
 
   sonarqube_scan:
     runs-on: ubuntu-latest
